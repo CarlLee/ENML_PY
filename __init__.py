@@ -83,7 +83,6 @@ class FileMediaStore(MediaStore):
         file_path = self.path + '/'  + hash_str + MIME_TO_EXTESION_MAPPING[mime_type]
         f = open(file_path, "w")
         f.write(data)
-        f = open(file_path, "w")
         f.close()
         return "file://" + file_path
         
