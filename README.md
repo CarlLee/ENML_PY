@@ -3,6 +3,11 @@ ENML_PY
 
 This is a python library for converting ENML (Evernote Markup Language, http://dev.evernote.com/start/core/enml.php) to/from HTML.
 
+Dependencies
+=======
+- [BeautifulSoup 4 (a.k.a. bs4)](http://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-beautiful-soup)
+- [Evernote SDK for python](http://dev.evernote.com/start/guides/python.php)
+
 Usage
 =======
 Convert with prettifying
@@ -67,4 +72,4 @@ class MyMediaStore(MediaStore):
 
 TODO
 ======
-- Map other media types to the corresponding HTML tags (Only Image tag currently)
+[ ] Map other media types to the corresponding HTML tags (Only Image tag currently)
