@@ -7,7 +7,7 @@ Usage
 =======
 Convert with prettifying
 -----
-
+    ``` python
     >>> import ENML_PY as enml
     >>> note = "<en-note>hello world</en-note>"
     >>> html = enml.ENMLToHTML(note)
@@ -17,30 +17,36 @@ Convert with prettifying
        hello world
      </body>
     </html>
+    ```
 
 Convert without prettifying
 -----
 
+    ``` python
     >>> import ENML_PY as enml
     >>> note = "<en-note>hello world</en-note>"
     >>> html = enml.ENMLToHTML(note, pretty=False)
     >>> print html
     <html><body>hello world</body></html>
+    ```
 
 Convert with saving resources
 -----
 
+    ``` python
     >>> client = EvernoteClient(token=dev_token)
     >>> noteStore = client.get_note_store()
     >>> mediaStore = enml.FileMediaStore(noteStore, note.guid, 'resources/')
     >>> content = noteStore.getNoteContent(note.guid)
     >>> html = enml.ENMLToHTML(content, False, media_store=mediaStore)
+    ```
 
 This will convert ENML to HTML, and save all the resource files related to the note in 'resources/' path, and replace all media inserted in ENML with according HTML tags with link pointing to the resource with 'file://' protocol.
 
 Write your own MediaStore
 -----
 
+    ``` python
     from ENML_PY import MediaStore, MIME_TO_EXTENSION_MAPPING
     class MyMediaStore(MediaStore):
         def __init__ (self, note_store, note_guid):
@@ -57,6 +63,7 @@ Write your own MediaStore
             ...
             # return the URL of the resource that has just been saved
             return some_url
+    ```
 
 TODO
 ======
