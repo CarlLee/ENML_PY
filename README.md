@@ -72,4 +72,4 @@ class MyMediaStore(MediaStore):
 
 TODO
 ======
-[ ] Map other media types to the corresponding HTML tags (Only Image tag currently)
+- [ ] Map other media types to the corresponding HTML tags (Only Image tag currently)
