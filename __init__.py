@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 MIME_TO_EXTESION_MAPPING = {
     'image/png': '.png',
     'image/jpg': '.jpg',
+    'image/jpeg': '.jpg',
     'image/gif': '.gif'
 }
 
