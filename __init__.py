@@ -1,5 +1,5 @@
-#!/bin/python 
-# -*- coding: utf-8 -*- 
+#!/bin/python
+# -*- coding: utf-8 -*-
 import os
 from bs4 import BeautifulSoup
 MIME_TO_EXTESION_MAPPING = {
@@ -9,12 +9,15 @@ MIME_TO_EXTESION_MAPPING = {
     'image/gif': '.gif'
 }
 
-def ENMLToHTML(content, pretty=True, **kwargs):
+def ENMLToHTML(content, pretty=True, header=True, **kwargs):
     """
     converts ENML string into HTML string
+
+    :param header: If True, note is wrapped in a <HTML><BODY> block.
+    :type header: bool
     """
     soup = BeautifulSoup(content)
-    
+
     todos = soup.find_all('en-todo')
     for todo in todos:
         checkbox = soup.new_tag('input')
@@ -33,17 +36,20 @@ def ENMLToHTML(content, pretty=True, **kwargs):
             new_tag = soup.new_tag('img')
             new_tag['src'] = resource_url
             media.replace_with(new_tag)
-    
+
     note = soup.find('en-note')
     if note:
-      body = soup.new_tag('body')
-      html = soup.new_tag('html')
-      html.append(note)
-      note.name = 'body'
+      if header:
+        html = soup.new_tag('html')
+        html.append(note)
+        note.name = 'body'
+      else:
+        html = note
+        note.name = 'div'
 
       output = html.prettify().encode('utf-8') if pretty else str(html)
       return output
-      
+
     return content
 
 
@@ -76,7 +82,7 @@ class FileMediaStore(MediaStore):
         """
         super(FileMediaStore, self).__init__(note_store, note_guid)
         self.path = os.path.abspath(path)
-    
+
     def save(self, hash_str, mime_type):
         """
         save the specified hash and return the saved file's URL
@@ -89,4 +95,4 @@ class FileMediaStore(MediaStore):
         f.write(data)
         f.close()
         return "file://" + file_path
-        
+
