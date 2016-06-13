@@ -15,6 +15,9 @@ def ENMLToHTML(content, pretty=True, header=True, **kwargs):
 
     :param header: If True, note is wrapped in a <HTML><BODY> block.
     :type header: bool
+    :param media_filter: optional callable object used to filter undesired resources.
+    Returns True if the resource must be kept in HTML, False otherwise.
+    :type media_fiter: callable object with prototype: `bool func(hash_str, mime_type)`
     """
     soup = BeautifulSoup(content)
 
@@ -26,6 +29,13 @@ def ENMLToHTML(content, pretty=True, header=True, **kwargs):
         if todo.has_attr('checked'):
             checkbox['checked'] = todo['checked']
         todo.replace_with(checkbox)
+
+    if 'media_filter' in kwargs:
+        media_filter = kwargs['media_filter']
+        for media in filter(
+            lambda media: not media_filter(media['hash'], media['type']),
+            soup.find_all('en-media')):
+            media.extract()
 
     if 'media_store' in kwargs:
         store = kwargs['media_store']
@@ -95,4 +105,11 @@ class FileMediaStore(MediaStore):
         f.write(data)
         f.close()
         return "file://" + file_path
+
+def images_media_filter(hash_str, mime_type):
+    """Helper usable with `ENMLToHTML` `media_filter` parameter to filter-out
+    resources that are not images so that output HTML won't contain
+    such invalid element <IMG src="path/to/document.pdf/>
+    """
+    return mime_type in MIME_TO_EXTESION_MAPPING
 
