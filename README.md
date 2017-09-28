@@ -1,11 +1,12 @@
 ENML_PY
 =======
 
-This is a python library for converting ENML (Evernote Markup Language, http://dev.evernote.com/start/core/enml.php) to/from HTML.
+This is a python library for converting ENML (Evernote Markup Language, http://dev.evernote.com/start/core/enml.php) to/from HTML and plain text.
 
 Dependencies
 =======
 - [BeautifulSoup 4 (a.k.a. bs4)](http://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-beautiful-soup)
+- [html2text](https://pypi.python.org/pypi/html2text)
 - [Evernote SDK for python](http://dev.evernote.com/start/guides/python.php)
 
 Usage
@@ -33,6 +34,16 @@ Convert without prettifying
 >>> html = enml.ENMLToHTML(note, pretty=False)
 >>> print html
 <html><body>hello world</body></html>
+```
+
+Convert to plaintext
+-----
+```python
+>>> import ENML_PY as enml
+>>> note = "<en-note>hello world</en-note>"
+>>> text = enml.ENMLToText(note, pretty=False)
+>>> print text
+hello world
 ```
 
 Convert with saving resources

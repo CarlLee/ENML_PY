@@ -2,12 +2,31 @@
 # -*- coding: utf-8 -*-
 import os
 from bs4 import BeautifulSoup
+import html2text
 MIME_TO_EXTESION_MAPPING = {
     'image/png': '.png',
     'image/jpg': '.jpg',
     'image/jpeg': '.jpg',
     'image/gif': '.gif'
 }
+
+REPLACEMENTS = [
+    ("&quot;", "\""),
+    ("&amp;apos;", "'"),
+    ("&apos;", "'"),
+    ("&amp;", "&"),
+    ("&lt;", "<"),
+    ("&gt;", ">"),
+    ("&laquo;", "<<"),
+    ("&raquo;", ">>"),
+    ("&#039;", "'"),
+    ("&#8220;", "\""),
+    ("&#8221;", "\""),
+    ("&#8216;", "\'"),
+    ("&#8217;", "\'"),
+    ("&#9632;", ""),
+    ("&#8226;", "-")]
+
 
 def ENMLToHTML(content, pretty=True, header=True, **kwargs):
     """
@@ -19,7 +38,7 @@ def ENMLToHTML(content, pretty=True, header=True, **kwargs):
     Returns True if the resource must be kept in HTML, False otherwise.
     :type media_fiter: callable object with prototype: `bool func(hash_str, mime_type)`
     """
-    soup = BeautifulSoup(content)
+    soup = BeautifulSoup(content, "html.parser")
 
     todos = soup.find_all('en-todo')
     for todo in todos:
@@ -62,6 +81,22 @@ def ENMLToHTML(content, pretty=True, header=True, **kwargs):
 
     return content
 
+
+def ENMLToText(content, pretty=True, header=True, **kwargs):
+    """
+    converts ENML string into HTML string then converts HTML string to plain text
+
+    :param header: If True, note is wrapped in a <HTML><BODY> block.
+    :type header: bool
+    :param media_filter: optional callable object used to filter undesired resources.
+    Returns True if the resource must be kept in HTML, False otherwise.
+    :type media_fiter: callable object with prototype: `bool func(hash_str, mime_type)`
+    """
+    html = ENMLToHTML(content, pretty, header)
+    text = str(html2text.html2text(html.decode('utf-8')))
+    for entity, replacement in REPLACEMENTS:
+        text = text.replace(entity, replacement)
+    return text
 
 class MediaStore(object):
     def __init__(self, note_store, note_guid):
